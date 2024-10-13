@@ -19,6 +19,7 @@ import { showFileMenu } from "./ui/fileMenu";
 import { activeFile, dailyNotes, weeklyNotes, settings } from "./ui/stores";
 import {
   customTagsSource,
+  customReviewedSource,
   streakSource,
   tasksSource,
   wordCountSource,
@@ -93,6 +94,7 @@ export default class CalendarView extends ItemView {
     // to feed in additional sources.
     const sources = [
       customTagsSource,
+      customReviewedSource,
       streakSource,
       wordCountSource,
       tasksSource,
@@ -279,7 +281,7 @@ export default class CalendarView extends ItemView {
     await leaf.openFile(existingFile);
 
     activeFile.setFile(existingFile);
-    workspace.setActiveLeaf(leaf, true, true)
+    workspace.setActiveLeaf(leaf, true, true);
   }
 
   async openOrCreateDailyNote(
@@ -306,7 +308,7 @@ export default class CalendarView extends ItemView {
     const leaf = inNewSplit
       ? workspace.splitActiveLeaf()
       : workspace.getUnpinnedLeaf();
-    await leaf.openFile(existingFile, { active : true, mode });
+    await leaf.openFile(existingFile, { active: true, mode });
 
     activeFile.setFile(existingFile);
   }
