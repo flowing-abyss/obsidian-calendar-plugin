@@ -4,5 +4,3 @@ data.json
 main.js
 .vscode/
 *.code-workspace
-package-lock.json
-yarn.lock
