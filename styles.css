@@ -9,3 +9,111 @@
 .settings-banner h4 {
   margin: 0;
 }
+
+/* Quarters to the right of the year, compact and inline */
+.title-container {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav {
+  margin: 0.6em 0 0.6em;
+}
+
+/* Make month and year font even smaller for compact header */
+.title-container .title {
+  margin-right: 12px;
+  margin-bottom: 0 !important;
+  font-size: 0.95em; /* Even smaller font for month and year */
+}
+
+.title-container .quarters {
+  font-size: 1.2em;
+  margin-top: 4px !important;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* One pair of parentheses around all quarters */
+/* .title-container .quarters::before {
+  content: "(";
+}
+.title-container .quarters::after {
+  content: ")";
+} */
+
+/* Make quarters font slightly larger for better visibility */
+.title-container .quarter {
+  font-size: 1.15em;
+  padding: 0 1px;
+  line-height: 1.3;
+  vertical-align: middle;
+}
+
+/* Dots between quarters */
+.title-container .divider {
+  display: inline;
+  font-size: 1em;
+  color: var(--text-muted);
+  margin: 0 1px;
+  position: relative;
+  top: -1px;
+}
+
+.title-container .month {
+  font-size: 0.9em;
+}
+
+.title-container .year {
+  font-size: 0.9em;
+}
+
+/* Remove previous separator after the year */
+.title-container .title::after {
+  content: none;
+}
+
+/* Adjust vertical separator: less space from year, better vertical alignment */
+.title-container .quarters::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1.3em;
+  background: var(--text-faint, #888);
+  margin: 0 0 0 6px; /* less space from the year */
+  opacity: 0.5;
+  vertical-align: middle;
+  border-radius: 1px;
+  position: relative;
+  top: 0; /* remove vertical shift */
+}
+
+/* Center quarters vertically with the year */
+.title-container .quarters {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* Prevent line breaks in the calendar header */
+.title-container,
+.title-container .title,
+.title-container .quarters {
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Remove border from active quarter */
+.title-container .quarter.active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
