@@ -10,9 +10,11 @@ export interface ISettings {
   wordsPerDot: number;
   weekStart: IWeekStartOption;
   shouldConfirmBeforeCreate: boolean;
-
+  ctrlClickOpensInNewTab: boolean;
+  showQuarter: boolean;
   // Weekly Note settings
   showWeeklyNote: boolean;
+  showWeeklyNoteRight: boolean;
   weeklyNoteFormat: string;
   weeklyNoteTemplate: string;
   weeklyNoteFolder: string;
@@ -33,15 +35,19 @@ const weekdays = [
 export const defaultSettings = Object.freeze({
   shouldConfirmBeforeCreate: true,
   weekStart: "locale" as IWeekStartOption,
+  ctrlClickOpensInNewTab: false,
 
   wordsPerDot: DEFAULT_WORDS_PER_DOT,
 
   showWeeklyNote: false,
+  showWeeklyNoteRight: false,
   weeklyNoteFormat: "",
   weeklyNoteTemplate: "",
   weeklyNoteFolder: "",
 
   localeOverride: "system-default",
+
+  showQuarter: false, // Added default value for showQuarter
 });
 
 export function appHasPeriodicNotesPluginLoaded(): boolean {
@@ -68,8 +74,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
         });
         banner.createEl("p", {
           cls: "setting-item-description",
-          text:
-            "The calendar is best used in conjunction with either the Daily Notes plugin or the Periodic Notes plugin (available in the Community Plugins catalog).",
+          text: "The calendar is best used in conjunction with either the Daily Notes plugin or the Periodic Notes plugin (available in the Community Plugins catalog).",
         });
       });
     }
@@ -79,8 +84,11 @@ export class CalendarSettingsTab extends PluginSettingTab {
     });
     this.addDotThresholdSetting();
     this.addWeekStartSetting();
+    this.addCtrlClickSetting();
     this.addConfirmCreateSetting();
     this.addShowWeeklyNoteSetting();
+    this.addShowWeeklyNoteRightSetting();
+    this.addShowQuarterSetting();
 
     if (
       this.plugin.options.showWeeklyNote &&
@@ -91,8 +99,7 @@ export class CalendarSettingsTab extends PluginSettingTab {
       });
       this.containerEl.createEl("p", {
         cls: "setting-item-description",
-        text:
-          "Note: Weekly Note settings are moving. You are encouraged to install the 'Periodic Notes' plugin to keep the functionality in the future.",
+        text: "Note: Weekly Note settings are moving. You are encouraged to install the 'Periodic Notes' plugin to keep the functionality in the future.",
       });
       this.addWeeklyNoteFormatSetting();
       this.addWeeklyNoteTemplateSetting();
@@ -146,7 +153,23 @@ export class CalendarSettingsTab extends PluginSettingTab {
         });
       });
   }
-
+  addCtrlClickSetting(): void {
+    new Setting(this.containerEl)
+      .setName("Ctrl + Click Behaviour")
+      .setDesc("Set the behaviour of Ctrl + Clicking on a date")
+      .addDropdown((dropdown) => {
+        dropdown.addOption("new-tab", "Open in new tab");
+        dropdown.addOption("new-split", "Open in new split");
+        dropdown.setValue(
+          this.plugin.options.ctrlClickOpensInNewTab ? "new-tab" : "new-split"
+        );
+        dropdown.onChange(async (value) => {
+          this.plugin.writeOptions(() => ({
+            ctrlClickOpensInNewTab: value === "new-tab",
+          }));
+        });
+      });
+  }
   addConfirmCreateSetting(): void {
     new Setting(this.containerEl)
       .setName("Confirm before creating new note")
@@ -170,6 +193,22 @@ export class CalendarSettingsTab extends PluginSettingTab {
         toggle.onChange(async (value) => {
           this.plugin.writeOptions(() => ({ showWeeklyNote: value }));
           this.display(); // show/hide weekly settings
+        });
+      });
+  }
+
+  // New method to add the Show Quarter setting
+  addShowQuarterSetting(): void {
+    new Setting(this.containerEl)
+      .setName("Show Quarter")
+      .setDesc(
+        "Enable this to display the quarter of the year (Q1, Q2, Q3, Q4) in the calendar"
+      )
+      .addToggle((toggle) => {
+        toggle.setValue(this.plugin.options.showQuarter);
+        toggle.onChange(async (value) => {
+          this.plugin.writeOptions(() => ({ showQuarter: value }));
+          this.display(); // Optionally refresh the settings UI if needed
         });
       });
   }
@@ -209,6 +248,18 @@ export class CalendarSettingsTab extends PluginSettingTab {
         textfield.setValue(this.plugin.options.weeklyNoteFolder);
         textfield.onChange(async (value) => {
           this.plugin.writeOptions(() => ({ weeklyNoteFolder: value }));
+        });
+      });
+  }
+  addShowWeeklyNoteRightSetting(): void {
+    new Setting(this.containerEl)
+      .setName("Change week number side")
+      .setDesc("Enable this to show week numbers to the right of the calendar")
+      .addToggle((toggle) => {
+        toggle.setValue(this.plugin.options.showWeeklyNoteRight);
+        toggle.onChange(async (value) => {
+          this.plugin.writeOptions(() => ({ showWeeklyNoteRight: value }));
+          this.display(); // show/hide weekly settings
         });
       });
   }
