@@ -18,9 +18,9 @@
   justify-content: center;
   margin-bottom: 2px;
 }
-
-.nav {
-  margin: 0.6em 0 0.6em;
+/* Styles for compact quarter navigation in the calendar header */
+.nav.svelte-r96tv9.svelte-r96tv9 {
+  margin: 0.6em 0 0.6em !important;
 }
 
 /* Make month and year font even smaller for compact header */
