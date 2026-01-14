@@ -117,3 +117,12 @@
   box-shadow: none !important;
   border: none !important;
 }
+
+/* Active day */
+.active {
+  background: transparent !important;
+  color: var(--text-accent) !important;
+  border: solid;
+  border-color: var(--text-accent);
+  border-width: 1px;
+}

@@ -1,26 +1,37 @@
 import type { Moment } from "moment";
+import type { TFile } from "obsidian";
 import type { ICalendarSource, IDayMetadata } from "obsidian-calendar-ui";
 import { getDailyNote, getWeeklyNote } from "obsidian-daily-notes-interface";
 import { get } from "svelte/store";
 
 import { dailyNotes, weeklyNotes } from "../stores";
 
-function getNoteReviewed(note: TFile | null): string[] {
+function getNoteReviewed(note: TFile | null): boolean | null {
   if (!note) {
-    return [];
+    return null;
   }
 
   const { metadataCache } = window.app;
-  const frontmatter = metadataCache.getFileCache(note)?.frontmatter;
+  const fileCache = metadataCache.getFileCache(note);
+  if (!fileCache || !fileCache.frontmatter) {
+    return null;
+  }
 
-  return frontmatter.reviewed;
+  const reviewed = fileCache.frontmatter.reviewed;
+  if (reviewed === undefined) {
+    return null;
+  }
+
+  return reviewed === true || reviewed === "true";
 }
 
 function getReviewedAttribute(note: TFile | null): Record<string, string> {
   const attrs: Record<string, string> = {};
   const isReviewed = getNoteReviewed(note);
 
-  attrs["data-reviewed"] = isReviewed;
+  if (isReviewed !== null) {
+    attrs["data-reviewed"] = isReviewed ? "true" : "false";
+  }
 
   return attrs;
 }
